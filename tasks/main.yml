@@ -1,6 +1,6 @@
 ---
 - name: Load OS specific variables
-  ansible.builtin.include_vars: "{{ ansible_distribution }}.yml"
+  ansible.builtin.include_vars: "{{ ansible_facts.distribution }}.yml"
 
 - name: Override default time client variable
   ansible.builtin.set_fact:
@@ -19,7 +19,7 @@
 - name: Set unwanted packages (container)
   ansible.builtin.set_fact:
     unwanted_packages: "{{ unwanted_packages + supported_ntp_client_packages }}"
-  when: '"container" in ansible_virtualization_tech_guest'
+  when: '"container" in ansible_facts.virtualization_tech_guest'
 
 - name: Make sure unwanted packages are absent
   become: true
@@ -29,7 +29,7 @@
 
 - name: Install and configure NTP client
   ansible.builtin.include_tasks: "{{ time_client }}.yml"
-  when: '"container" not in ansible_virtualization_tech_guest'
+  when: '"container" not in ansible_facts.virtualization_tech_guest'
 
 - name: Install tools
   become: true
