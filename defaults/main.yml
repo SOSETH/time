@@ -14,3 +14,14 @@ timezone: Zurich
 ntp_servers:
   - time.ethz.ch
   - swisstime.ethz.ch
+
+# Optional Chrony drop-in source files.
+# The legacy ntp_servers-based chrony.conf remains managed as before.
+ntp_sources_dir: /etc/chrony/sources.d
+
+# List of drop-in source files to manage.
+# Example:
+# ntp_sources_files:
+#   - name: ethz.sources
+#     servers: [time.ethz.ch, time6.ethz.ch]
+ntp_sources_files: []

@@ -22,6 +22,29 @@
   notify:
     - Restart chronyd
 
+- name: Ensure chrony sources.d exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ ntp_sources_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  when: ntp_sources_files | length > 0
+
+- name: Install chronyd source drop-ins
+  become: true
+  ansible.builtin.template:
+    src: chrony_source_file.j2
+    dest: "{{ ntp_sources_dir }}/{{ item.name }}"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ ntp_sources_files }}"
+  notify:
+    - Restart chronyd
+  when: ntp_sources_files | length > 0
+
 - name: Enable chronyd
   become: true
   ansible.builtin.service:
