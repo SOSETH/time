@@ -17,11 +17,19 @@ ntp_servers:
 
 # Optional Chrony drop-in source files.
 # The legacy ntp_servers-based chrony.conf remains managed as before.
-ntp_sources_dir: /etc/chrony/sources.d
+ntp_sources_dir:
+  dir: /etc/chrony/sources.d
+  # List of drop-in source files to manage.
+  # Example:
+  # files:
+  #   - name: ethz.sources
+  #     servers: [time.ethz.ch, swisstime.ethz.ch]
+  files: []
 
-# List of drop-in source files to manage.
-# Example:
-# ntp_sources_files:
-#   - name: ethz.sources
-#     servers: [time.ethz.ch, time6.ethz.ch]
-ntp_sources_files: []
+# Prefer using a chrony conf.d drop-in instead of managing the main
+# chrony.conf. Can be overridden in OS/release-specific vars.
+# Path for the managed drop-in file when time_chrony_use_dropins=true.
+time_chrony_conf_dropin_dir:
+  use: false
+  dir: /etc/chrony/conf.d/
+  defaultFile: custom.conf

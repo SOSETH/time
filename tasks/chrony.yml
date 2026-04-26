@@ -21,8 +21,9 @@
     mode: "0644"
   notify:
     - Restart chronyd
+  when: not time_chrony_use_dropins
 
-- name: Ensure chrony sources.d exists
+- name: Ensure chrony conf.d exists
   become: true
   ansible.builtin.file:
     path: "{{ ntp_sources_dir }}"
@@ -30,9 +31,19 @@
     owner: root
     group: root
     mode: "0755"
-  when: ntp_sources_files | length > 0
+  when: (ntp_sources_files | length > 0)
 
-- name: Install chronyd source drop-ins
+- name: Ensure chrony sources.d exists
+  become: true
+  ansible.builtin.file:
+    path: /etc/chrony/sources.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  when: (ntp_sources_files | length > 0)
+
+- name: Install chronyd conf.d drop-in
   become: true
   ansible.builtin.template:
     src: chrony_source_file.j2
@@ -43,7 +54,7 @@
   loop: "{{ ntp_sources_files }}"
   notify:
     - Restart chronyd
-  when: ntp_sources_files | length > 0
+  when: time_chrony_use_dropins
 
 - name: Enable chronyd
   become: true

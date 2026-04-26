@@ -1,0 +1,4 @@
+# Managed with Ansible
+{% for s in ntp_servers %}
+server {{ s }} iburst
+{% endfor %}

@@ -8,13 +8,13 @@ Configuration of timezone and ntp settings
  * Fedora 25 Server
 
 ## Configuration
-| Name | Default value | Description |
-|------|---------------|-------------|
-|`timezone_area` | `Europe` | Timezone area |
-|`timezone` | `Zurich` | Exact timezone (area needs to match) |
-|`ntp_servers` | `["time.ethz.ch", "swisstime.ethz.ch"]` | Timeservers. Note that these are only guaranteed to be accessible from inside ETH's network, so you might need to specify different ones. |
-|`ntp_sources_dir` | `/etc/chrony/sources.d` | Directory for optional Chrony source drop-ins. |
-|`ntp_sources_files` | `[]` | Optional list of drop-in files and server lists to render as `server ... iburst` lines. |
+| Name                | Default value                           | Description                                                                                                                               |
+| ------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `timezone_area`     | `Europe`                                | Timezone area                                                                                                                             |
+| `timezone`          | `Zurich`                                | Exact timezone (area needs to match)                                                                                                      |
+| `ntp_servers`       | `["time.ethz.ch", "swisstime.ethz.ch"]` | Timeservers. Note that these are only guaranteed to be accessible from inside ETH's network, so you might need to specify different ones. |
+| `ntp_sources_dir`   | `/etc/chrony/sources.d`                 | Directory for optional Chrony source drop-ins.                                                                                            |
+| `ntp_sources_files` | `[]`                                    | Optional list of drop-in files and server lists to render as `server ... iburst` lines.                                                   |
 
 ### Proxmox 9 / Debian Trixie drop-in example
 

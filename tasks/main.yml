@@ -2,6 +2,11 @@
 - name: Load OS specific variables
   ansible.builtin.include_vars: "{{ ansible_facts.distribution }}.yml"
 
+- name: Load OS release specific variables
+  ansible.builtin.include_vars:
+    file: "{{ ansible_facts.distribution }}-{{ ansible_facts.distribution_release }}.yml"
+  failed_when: false
+
 - name: Override default time client variable
   ansible.builtin.set_fact:
     time_client: "{{ time_client_override }}"
