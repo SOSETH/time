@@ -1,4 +1,8 @@
 ---
-# Debian 13 / Trixie: keep vendor chrony.conf and manage sources via drop-ins.
-time_chrony_use_dropins: true
-ntp_sources_dir: /etc/chrony/sources.d
+# Debian 13 / Trixie: keep vendor chrony.conf and manage drop-ins.
+chrony_conf_dropin_enabled: true
+chrony_conf_dropin_dir: /etc/chrony/conf.d
+chrony_conf_dropin_file: vis.conf
+
+chrony_sources_dropins_enabled: true
+chrony_sources_dropins_dir: /etc/chrony/sources.d

@@ -1,4 +1,4 @@
 # Managed with Ansible
-{% for s in ntp_servers %}
+{% for s in item.servers %}
 server {{ s }} iburst
 {% endfor %}
