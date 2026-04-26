@@ -11,6 +11,28 @@
     name: chrony
     state: present
 
+- name: Ensure chrony sources.d support is configured
+  become: true
+  ansible.builtin.lineinfile:
+    path: "{{ time_chrony_conf_path }}"
+    regexp: "^\\s*sourcedir\\s+{{ chrony_sources_dropins_dir | regex_escape }}/?\\s*$"
+    line: "sourcedir {{ chrony_sources_dropins_dir }}"
+    state: present
+    create: false
+    backup: true
+  when: chrony_sources_dropins_enabled
+
+- name: Ensure chrony conf.d support is configured
+  become: true
+  ansible.builtin.lineinfile:
+    path: "{{ time_chrony_conf_path }}"
+    regexp: "^\\s*confdir\\s+{{ chrony_conf_dropin_dir | regex_escape }}/?\\s*$"
+    line: "confdir {{ chrony_conf_dropin_dir }}"
+    state: present
+    create: false
+    backup: true
+  when: chrony_conf_dropin_enabled
+
 - name: Install chronyd configuration
   become: true
   ansible.builtin.template:
@@ -21,29 +43,52 @@
     mode: "0644"
   notify:
     - Restart chronyd
+  when: not chrony_conf_dropin_enabled
 
-- name: Ensure chrony sources.d exists
+- name: Ensure chrony conf.d exists
   become: true
   ansible.builtin.file:
-    path: "{{ ntp_sources_dir }}"
+    path: "{{ chrony_conf_dropin_dir }}"
     state: directory
     owner: root
     group: root
     mode: "0755"
-  when: ntp_sources_files | length > 0
+  when: chrony_conf_dropin_enabled
+
+- name: Ensure chrony sources.d exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ chrony_sources_dropins_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  when: chrony_sources_dropins_enabled
+
+- name: Install chronyd conf.d drop-in
+  become: true
+  ansible.builtin.template:
+    src: etc_chrony.conf.j2
+    dest: "{{ chrony_conf_dropin_dir }}/{{ chrony_conf_dropin_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Restart chronyd
+  when: chrony_conf_dropin_enabled
 
 - name: Install chronyd source drop-ins
   become: true
   ansible.builtin.template:
-    src: chrony_source_file.j2
-    dest: "{{ ntp_sources_dir }}/{{ item.name }}"
+    src: chrony_sources_file.conf.j2
+    dest: "{{ chrony_sources_dropins_dir }}/{{ item.name }}"
     owner: root
     group: root
     mode: "0644"
-  loop: "{{ ntp_sources_files }}"
+  loop: "{{ chrony_sources_dropins_files }}"
   notify:
     - Restart chronyd
-  when: ntp_sources_files | length > 0
+  when: chrony_sources_dropins_enabled
 
 - name: Enable chronyd
   become: true

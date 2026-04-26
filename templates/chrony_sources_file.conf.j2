@@ -1,0 +1,4 @@
+# Managed with Ansible
+{% for s in item.servers %}
+server {{ s }} iburst
+{% endfor %}
